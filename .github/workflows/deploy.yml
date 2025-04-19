@@ -1,9 +1,9 @@
 # File: .github/workflows/deploy.yml
-name: Deploy to GitHub Pages
+name: CI/CD Pipeline
 
 # ---------- EVENT TRIGGERS ----------
 on:
-  # Re‑deploy any time you push to `main`
+  # Re‑deploy any time you push to `master`
   push:
     branches: [master]
 
@@ -18,7 +18,7 @@ permissions:
 
 # ---------- JOBS ----------
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       # 1. Enable Pages for this repo (only needed the first time)
@@ -28,23 +28,35 @@ jobs:
       # 2. Check out source
       - uses: actions/checkout@v4
 
-      # 3. Install deps, build, and upload artifacts
+      # 3. Setup pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.x
+
+      # 4. Run linting, formatting and type checking
+      - name: Run checks
+        run: |
+          pnpm install
+          pnpm format:check || true
+          pnpm lint || true
+          pnpm check || true
+
+      # 5. Build and upload artifacts
       - name: Build with Astro
         uses: withastro/action@v4
         with:
           node-version: 22
+          package-manager: pnpm@latest
 
   deploy:
-    needs: build
+    needs: build-and-deploy
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
-    permissions:
-      pages: write
-      id-token: write
     steps:
-      # 4. Deploy the artifact produced by the build job
+      # 6. Deploy the artifact produced by the build job
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
