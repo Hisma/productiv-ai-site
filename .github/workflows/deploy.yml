@@ -38,9 +38,9 @@ jobs:
       - name: Run checks
         run: |
           pnpm install
-          pnpm format || true
-          pnpm lint || true
-          pnpm check || true
+          pnpm format
+          pnpm lint
+          pnpm check
 
       # 5. Build and upload artifacts
       - name: Build with Astro

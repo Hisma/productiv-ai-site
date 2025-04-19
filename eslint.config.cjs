@@ -15,6 +15,7 @@ module.exports = [
       ".astro/**",
       "dist/**",
       "eslint.config.cjs",     // don’t lint your config file
+      "**/*.d.ts"
     ],
   },
 
