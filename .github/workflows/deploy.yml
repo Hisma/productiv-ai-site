@@ -38,7 +38,7 @@ jobs:
       - name: Run checks
         run: |
           pnpm install
-          pnpm install --unsafe-perm=true sharp
+          pnpm approve-builds sharp
           pnpm format || true
           pnpm lint || true
           pnpm check || true
