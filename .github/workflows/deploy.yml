@@ -1,0 +1,50 @@
+# File: .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+# ---------- EVENT TRIGGERS ----------
+on:
+  # Re‑deploy any time you push to `main`
+  push:
+    branches: [master]
+
+  # Allow manual runs from the Actions tab
+  workflow_dispatch:
+
+# ---------- DEFAULT PERMISSIONS ----------
+permissions:
+  contents: read        # to checkout the repo
+  pages: write          # to publish to Pages
+  id-token: write       # to authenticate to Pages
+
+# ---------- JOBS ----------
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Enable Pages for this repo (only needed the first time)
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # 2. Check out source
+      - uses: actions/checkout@v4
+
+      # 3. Install deps, build, and upload artifacts
+      - name: Build with Astro
+        uses: withastro/action@v4
+        with:
+          node-version: 22
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      # 4. Deploy the artifact produced by the build job
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
