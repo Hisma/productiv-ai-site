@@ -37,7 +37,7 @@ jobs:
       # 4. Run linting, formatting and type checking
       - name: Run checks
         run: |
-          pnpm install --allow-build=esbuild --allow-build=sharp
+          pnpm install
           pnpm format || true
           pnpm lint || true
           pnpm check || true
