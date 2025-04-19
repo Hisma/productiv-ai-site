@@ -28,7 +28,13 @@ jobs:
       # 2. Check out source
       - uses: actions/checkout@v4
 
-      # 3. Run linting, formatting and type checking
+      # 3. Setup pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.x
+
+      # 4. Run linting, formatting and type checking
       - name: Run checks
         run: |
           pnpm install
@@ -36,7 +42,7 @@ jobs:
           pnpm lint || true
           pnpm check || true
 
-      # 4. Build and upload artifacts
+      # 5. Build and upload artifacts
       - name: Build with Astro
         uses: withastro/action@v4
         with:
@@ -50,7 +56,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      # 5. Deploy the artifact produced by the build job
+      # 6. Deploy the artifact produced by the build job
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
