@@ -1,0 +1,11 @@
+# Ignore everything by default
+*
+
+# Allow these explicitly
+!.gitignore
+!README.md
+!netlify.toml
+
+# Allow everything inside the public directory
+!public/
+!public/**/*
