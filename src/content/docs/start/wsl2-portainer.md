@@ -33,7 +33,9 @@ If you already have a linux workstation (bare metal or hypervisor-based VM), you
    - downloads latest Ubuntu LTS (as of now version 24.04)
    - sets Ubuntu LTS as the default WSL 2 version
 
-2. After Ubuntu is installed, launch the app and create your Linux username/password.
+2. Create your Linux username/password.  
+
+That's it.  After you set your password you'll be in your WSL2 linux environment.  Use your search bar and search for "Ubuntu" to open a new terminal session at any time.
 
 ---
 
@@ -102,8 +104,8 @@ ctrl + x to exit the nano editor & Y to save our new file changes.
 3. Launch it:
 
    ```bash
-   docker compose up -d
-   docker ps
+   sudo docker compose up -d
+   sudo docker ps
    ```
 
 You should see the `portainer/portainer-ce:latest` image listed with a `up` status.

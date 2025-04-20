@@ -26,6 +26,7 @@ This repository contains the framework for the ProductivAI website, built with A
 ## Development
 
 The site is built using:
+
 - [Astro](https://astro.build) - Web framework
 - [Starlight](https://starlight.astro.build) - Documentation theme
 - Modern web technologies for optimal performance

@@ -1,44 +1,25 @@
-# Astro build output
-dist/
+# Hide everything by default
+*
+**/*/
+**/*
+
+# Hide all directories
 .astro/
-
-# Dependencies
-node_modules/
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Environment variables
-.env
-.env.production
-
-# macOS-specific files
-.DS_Store
-
-# Local Netlify folder
-.netlify
-
-# VSCode settings
+.netlify/
 .vscode/
-*.code-workspace
-
-# Source files (to hide content)
-src/
+dist/
+node_modules/
 public/
-!public/favicon.svg
+src/
 
-# Config files (hiding potentially sensitive settings)
+# Hide config files
 *.config.js
 *.config.mjs
+*.config.cjs
 *.config.ts
-tsconfig.json
-pnpm-lock.yaml
-netlify.toml
-package.json
-
-# Exceptions - files to keep visible
-!README.md
-!LICENSE
+*.json
+*.yaml
+*.yml
+*.toml
+*.lock
+*.workspace

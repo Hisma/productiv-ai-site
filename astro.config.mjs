@@ -14,7 +14,7 @@ export default defineConfig({
   site: "https://productiv-ai.netlify.app/",
 
   integrations: [starlight({
-    title: "Knowledgebase",
+    title: "ProductivAI Docs",
     customCss: ["./src/styles/global.css"],
     social: [
       {
