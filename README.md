@@ -17,7 +17,7 @@ ProductivAI is a comprehensive learning platform focused on helping individuals 
 
 ## Website
 
-Visit [ProductivAI.com](https://yourdomainhere.com) to access the full learning platform.
+Visit [productiv-ai.guide](https://productiv-ai.guide/) to access the full learning platform.
 
 ## Repository Structure
 
