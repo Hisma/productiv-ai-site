@@ -3,3 +3,13 @@
 @import "@astrojs/starlight-tailwind";
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
+.hero > img {
+    width: min(100%, 40rem) !important;
+    max-width: 600px !important;
+  }
+  
+  @media (min-width: 50rem) {
+    .hero > img {
+      width: min(100%, 40rem) !important;
+    }
+  }
