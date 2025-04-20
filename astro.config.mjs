@@ -10,7 +10,7 @@ export default defineConfig({
   adapter: netlify(),
 
   // Replace with your actual Netlify site URL
-  site: 'https://capable-cendol-83bdc6.netlify.app/',
+  site: 'https://productiv-ai.netlify.app/',
 
   integrations: [
     starlight({
