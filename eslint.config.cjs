@@ -14,8 +14,8 @@ module.exports = [
       "node_modules/**",
       ".astro/**",
       "dist/**",
-      "eslint.config.cjs",     // don’t lint your config file
-      "**/*.d.ts"
+      "eslint.config.cjs", // don’t lint your config file
+      "**/*.d.ts",
     ],
   },
 
@@ -25,7 +25,7 @@ module.exports = [
   // ─── 2) Pull in shareable configs via FlatCompat ───
   ...compat.extends(
     "plugin:@typescript-eslint/recommended",
-    "plugin:astro/recommended"
+    "plugin:astro/recommended",
   ),
 
   // ─── 3) JS & TS files ───

@@ -5,12 +5,11 @@
     "resolveJsonModule": true
   },
   "include": [
-    ".astro/types.d.ts",        // Astro’s generated types
-    "src/**/*.{ts,tsx,astro}",   // your site’s code
-    "content.config.ts"          // your content config
+    ".astro/types.d.ts", // Astro’s generated types
+    "src/**/*.{ts,tsx,astro}", // your site’s code
+    "content.config.ts" // your content config
   ],
   "exclude": [
-    "dist"                       // only need to exclude your output
+    "dist" // only need to exclude your output
   ]
 }
-

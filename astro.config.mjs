@@ -1,37 +1,35 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
-import netlify from '@astrojs/netlify';
+import { defineConfig } from "astro/config";
+import starlight from "@astrojs/starlight";
+import netlify from "@astrojs/netlify";
 
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  output: 'server',
+  output: "server",
   adapter: netlify(),
 
   // Replace with your actual Netlify site URL
-  site: 'https://productiv-ai.netlify.app/',
+  site: "https://productiv-ai.netlify.app/",
 
   integrations: [
     starlight({
-      title: 'ProducivAI Learning',
-	  customCss: [
-		'./src/styles/global.css',
-	  ],
+      title: "ProductivAI Learning",
+      customCss: ["./src/styles/global.css"],
       social: [
         {
-          icon: 'github',
-          label: 'GitHub',
-          href: 'https://github.com/withastro/starlight',
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/withastro/starlight",
         },
       ],
       sidebar: [
         {
-          label: 'Start Learning',
+          label: "Start Learning",
           items: [
             {
-              label: 'Deploy Linux & Docker/Portainer',
-              slug: 'start/wsl2-portainer',
+              label: "Deploy Linux & Docker/Portainer",
+              slug: "start/wsl2-portainer",
             },
           ],
         },
