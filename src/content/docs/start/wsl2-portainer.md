@@ -1,5 +1,5 @@
 ---
-title: "Create AI Dev Environment Part 1: Deploy Linux & Docker/Portainer"
+title: "Deploy Linux & Docker/Portainer"
 description: "The very first step in our ‘Automate Everything’ series: stand‑up WSL 2 on Windows and deploy Portainer with Docker Compose to lay the foundation for every workflow that comes next."
 ---
 

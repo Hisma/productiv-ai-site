@@ -14,9 +14,13 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@astrojs/netlify": "^6.3.0",
     "@astrojs/starlight": "^0.34.0",
+    "@astrojs/starlight-tailwind": "^4.0.1",
+    "@tailwindcss/vite": "^4.1.4",
     "astro": "^5.6.1",
-    "sharp": "^0.32.6"
+    "sharp": "^0.32.6",
+    "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
