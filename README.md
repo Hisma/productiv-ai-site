@@ -33,4 +33,4 @@ The site is built using:
 
 ## License
 
-© 2025 ProductivAI. All rights reserved.
+© 2025 ProductivAI by Richard Meyer. All rights reserved.

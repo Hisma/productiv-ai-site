@@ -6,6 +6,7 @@
 !README.md
 !netlify.toml
 
-# Allow everything inside the public directory
+# Allow everything inside the public directory & src directory for now...
 !public/
 !public/**/*
+!src/
