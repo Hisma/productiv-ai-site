@@ -33,9 +33,9 @@ If you already have a linux workstation (bare metal or hypervisor-based VM), you
    - downloads latest Ubuntu LTS (as of now version 24.04)
    - sets Ubuntu LTS as the default WSL 2 version
 
-2. Create your Linux username/password.  
+2. Create your Linux username/password.
 
-That's it.  After you set your password you'll be in your WSL2 linux environment.  Use your search bar and search for "Ubuntu" to open a new terminal session at any time.
+That's it. After you set your password you'll be in your WSL2 linux environment. Use your search bar and search for "Ubuntu" to open a new terminal session at any time.
 
 ---
 
@@ -44,6 +44,7 @@ That's it.  After you set your password you'll be in your WSL2 linux environment
 We're going to deploy the latest version of docker and use portainer as our container orchestrator and front-end.
 
 1. Set up Docker's apt repository.
+
 ```bash
 # inside the Ubuntu shell
 # Add Docker's official GPG key:
@@ -59,11 +60,13 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt update
 ```
+
 2. Install the latest Docker packages
 
 ```bash
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
+
 ---
 
 ## Step 3 — Deploy Portainer with Docker Compose

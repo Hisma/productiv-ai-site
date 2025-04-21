@@ -8,15 +8,17 @@ Most users will achieve better productivity using API services like OpenAI, Goog
 
 ## Pre-Reqs For Ollama Nvidia GPU Setup
 
-We already set up WSL2 linux and docker with portainer in the previous lesson. If you haven’t done that yet, please get linux & portainer up and running. Next - 
+We already set up WSL2 linux and docker with portainer in the previous lesson. If you haven’t done that yet, please get linux & portainer up and running. Next -
 
-- Install nvidia cuda toolkit 12.5 for WSL2 - 
+- Install nvidia cuda toolkit 12.5 for WSL2 -
+
 ```bash
 wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-keyring_1.1-1_all.deb
 sudo dpkg -i cuda-keyring_1.1-1_all.deb
 sudo apt-get update
 sudo apt-get -y install cuda-toolkit-12-5
 ```
+
 - **note** \- that’s for WSL2 users. For ubuntu (enter the version of ubuntu corresponding to your distro - this is ubuntu 24.04) -
 
 ```bash
@@ -26,28 +28,33 @@ sudo apt-get update
 sudo apt-get -y install cuda-toolkit-12-5
 ```
 
-CUDA toolkit 12.5 is widely supported by most Nvidia GPUs and compatible with most AI tools. It is recommended NOT to go for the bleeding edge with Nvidia drivers/toolkits UNLESS you’re running a 5xxx series nvidia GPU, as a lot of AI tools lag support of latest NVidia drivers & CUDA versions by a solid 3-6 months+.  
-
+CUDA toolkit 12.5 is widely supported by most Nvidia GPUs and compatible with most AI tools. It is recommended NOT to go for the bleeding edge with Nvidia drivers/toolkits UNLESS you’re running a 5xxx series nvidia GPU, as a lot of AI tools lag support of latest NVidia drivers & CUDA versions by a solid 3-6 months+.
 
 - Install nvidia container toolkit -
 
 Container toolkit is required for CUDA support in docker (essentially docker GPU passthrough)
 
 1. Configure the production repository:
+
 ```bash
 curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
   && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
     sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
     sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
 ```
+
 2. Update the packages list from the repository:
+
 ```bash
 sudo apt-get update
 ```
+
 3. Install the NVIDIA Container Toolkit packages:
+
 ```bash
 sudo apt-get install -y nvidia-container-toolkit nvidia-container-runtime
 ```
+
 4. Configure Docker to use Nvidia driver
 
 ```bash
@@ -86,12 +93,12 @@ services:
     image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
     networks:
       - docker_default
-      
+
   open-webui:
     build:
       context: .
       args:
-        OLLAMA_BASE_URL: '/ollama'
+        OLLAMA_BASE_URL: "/ollama"
       dockerfile: Dockerfile
     image: ghcr.io/open-webui/open-webui:dev-cuda
     container_name: open-webui
@@ -109,13 +116,13 @@ services:
     ports:
       - ${OPEN_WEBUI_PORT-3000}:8080
     environment:
-      - 'OLLAMA_BASE_URL=http://ollama:11434'
-      - 'WEBUI_SECRET_KEY='
+      - "OLLAMA_BASE_URL=http://ollama:11434"
+      - "WEBUI_SECRET_KEY="
       - host.docker.internal:host-gateway
     restart: unless-stopped
     networks:
       - docker_default
-      
+
 volumes:
   ollama: {}
   open-webui: {}
@@ -139,7 +146,7 @@ services:
     build:
       context: .
       args:
-        OLLAMA_BASE_URL: '/ollama'
+        OLLAMA_BASE_URL: "/ollama"
       dockerfile: Dockerfile
     image: ghcr.io/open-webui/open-webui:dev-cuda
     container_name: open-webui
@@ -148,8 +155,8 @@ services:
     ports:
       - ${OPEN_WEBUI_PORT-3000}:8080
     environment:
-      - 'OLLAMA_BASE_URL=http://ollama:11434'
-      - 'WEBUI_SECRET_KEY='
+      - "OLLAMA_BASE_URL=http://ollama:11434"
+      - "WEBUI_SECRET_KEY="
       - host.docker.internal:host-gateway
     restart: unless-stopped
     networks:
@@ -157,7 +164,7 @@ services:
 
 volumes:
   open-webui: {}
-  
+
 networks:
   docker_default:
     external: true
@@ -199,9 +206,11 @@ Test the API by starting a new chat, selecting an OpenAI model from the dropdown
 
 ## Configure Ollama (If using local AI)
 
-From the same “connections” menu we added our OpenAI connection, Under “Manage Ollama API Connections”, add a new connection. We’re going connect directly to the ollama docker container by it’s name. This works because both containers are on the same local network.
+From the same “connections” menu we added our OpenAI connection, Under “Manage Ollama API Connections”, confirm you see the connection we configured as an environment variable when we set up docker container `OLLAMA_BASE_URL=http://ollama:11434`. 
 
 ![image-20250420-184125.png](./attachments/image-20250420-184125.png)
+
+We directly connect to the ollama docker container by it’s name. This works because both containers are on the same local network.
 
 ## Test Ollama
 
@@ -229,7 +238,4 @@ Test web search functionality by toggling it on and testing it with a prompt tha
 
 All set!
 
-Now we can get to the fun stuff.  
-
-
-
+Now we can get to the fun stuff.
