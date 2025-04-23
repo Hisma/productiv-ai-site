@@ -1,9 +1,9 @@
 ---
 title: "Deploy Linux & Docker/Portainer"
-description: "The very first step in our 'Automate Everything' series: stand-up WSL 2 on Windows and deploy Portainer with Docker Compose to lay the foundation for every workflow that comes next."
+description: "The very first step in our 'ProductivAI' series: stand-up WSL 2 on Windows and deploy Portainer with Docker Compose to lay the foundation for every workflow that comes next."
 ---
 
-import { YouTube } from 'astro-embed'
+import { YouTube } from "astro-embed";
 
 <YouTube id="6myJrfydZLg" />
 
@@ -20,8 +20,12 @@ If you already have a linux workstation (bare metal or hypervisor-based VM), you
 - Perfect runtime for Docker without Virtual Machine overhead
 
 {/* Adding the MDX-compatible note format */}
+
 <div className="note">
-  <p><strong>Note:</strong> WSL 2 needs <strong>Windows 10 21H2+</strong> or <strong>Windows 11</strong>.</p>
+  <p>
+    <strong>Note:</strong> WSL 2 needs <strong>Windows 10 21H2+</strong> or{" "}
+    <strong>Windows 11</strong>.
+  </p>
 </div>
 
 ---
@@ -111,6 +115,7 @@ ctrl + x to exit the nano editor & Y to save our new file changes.
 
 {/* Adding a comment for clarity */}
 {/* Note about editing files */}
+
 - going forward, I'll assume you know how to make and edit files in linux.
 
 3. Launch it:

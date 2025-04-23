@@ -1,6 +1,6 @@
 ---
 title: "Setup Up OpenWebUI with Ollama"
-description: "The very first step in our ‘Automate Everything’ series: stand‑up WSL 2 on Windows and deploy Portainer with Docker Compose to lay the foundation for every workflow that comes next."
+description: "The second step in our ‘ProductivAI’ series: Install OpenWebUI and Ollama as microservices to enable local LLM useage (ollama), as well as a slick UI for using MCPs, RAG, and more (OpenWebUI)."
 ---
 
 OpenWebUI offers a comprehensive interface for chat models, tools, RAG, and MCPs. While Ollama provides an easy way to run models locally, you'll need an Nvidia GPU (8GB+ RAM) for optimal performance. Without a suitable GPU, you can skip the Ollama installation entirely.
