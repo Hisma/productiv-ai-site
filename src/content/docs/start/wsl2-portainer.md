@@ -2,6 +2,7 @@
 title: "Deploy Linux & Docker/Portainer"
 description: "The very first step in our ‘Automate Everything’ series: stand‑up WSL 2 on Windows and deploy Portainer with Docker Compose to lay the foundation for every workflow that comes next."
 ---
+
 https://www.youtube.com/watch?v=6myJrfydZLg
 
 If you're a beginner to linux and docker/microservices, this how-to is a great starting point. This approach creates a clean canvas to deploy our AI tools in a modular and easily maintainable manner. We'll get to the actual AI stuff soon.
