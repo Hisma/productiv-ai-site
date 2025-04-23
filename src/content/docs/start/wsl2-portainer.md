@@ -1,0 +1,140 @@
+---
+title: "Deploy Linux & Docker/Portainer"
+description: "The very first step in our ‘Automate Everything’ series: stand‑up WSL 2 on Windows and deploy Portainer with Docker Compose to lay the foundation for every workflow that comes next."
+---
+
+https://www.youtube.com/watch?v=6myJrfydZLg
+
+If you're a beginner to linux and docker/microservices, this how-to is a great starting point. This approach creates a clean canvas to deploy our AI tools in a modular and easily maintainable manner. We'll get to the actual AI stuff soon.
+
+---
+
+If you already have a linux workstation (bare metal or hypervisor-based VM), you can skip this step. If you're a Windows user, we'll deploy linux via WSL2.
+
+## Why WSL 2?
+
+- Native‑speed Linux kernel on Windows
+- Shared file system with Windows (`\\wsl$`) - no clunky dual‑boot
+- Perfect runtime for Docker without Virtual Machine overhead
+
+> **note:** WSL 2 needs **Windows 10 21H2+** or **Windows 11**.
+
+---
+
+## Step 1 — Install WSL 2 + Ubuntu
+
+1. Open **PowerShell as Administrator** and run the single command:
+
+   ```powershell
+   wsl --install
+   ```
+
+   This:
+
+   - enables all pre-requiste _Windows Subsystem for Linux_ features
+   - downloads latest Ubuntu LTS (as of now version 24.04)
+   - sets Ubuntu LTS as the default WSL 2 version
+
+2. Create your Linux username/password.
+
+That's it. After you set your password you'll be in your WSL2 linux environment. Use your search bar and search for "Ubuntu" to open a new terminal session at any time.
+
+---
+
+## Step 2 — Install Docker inside WSL 2
+
+We're going to deploy the latest version of docker and use portainer as our container orchestrator and front-end.
+
+1. Set up Docker's apt repository.
+
+```bash
+# inside the Ubuntu shell
+# Add Docker's official GPG key:
+sudo apt update
+sudo apt install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+```
+
+2. Install the latest Docker packages
+
+```bash
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+---
+
+## Step 3 — Deploy Portainer with Docker Compose
+
+Portainer gives us a browser dashboard to **launch / monitor / troubleshoot** containers and stacks.
+
+We'll be using the stacks feature to organize and manage our containers in later lessons. For now, let's just get portainer running.
+
+1. Create 2 new folders - a docker folder for our docker-compose file, & a portainer folder to mount portainer data to our host:
+
+   ```bash
+   mkdir -p ~/docker/portainer
+   ```
+
+2. Add a `docker-compose.yml`:
+
+Inside the `docker` directory, create a new file with the command `nano docker-compose.yml`.
+Add the following contents -
+
+```yaml
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - "8000:8000" # Edge agent (optional)
+      - "9443:9443" # HTTPS UI/API
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/docker/portainer:/data
+```
+
+ctrl + x to exit the nano editor & Y to save our new file changes.
+
+- going forward, I'll assume you know how to make and edit files in linux.
+
+3. Launch it:
+
+   ```bash
+   sudo docker compose up -d
+   sudo docker ps
+   ```
+
+You should see the `portainer/portainer-ce:latest` image listed with a `up` status.
+
+4. Open **https://localhost:9443** (enter an admin password on first run).
+
+After setting a password, you're greeted with the portainer dashboard. Click "containers" to see the status of your newly created container.
+
+Great, now we've created the canvas for our AI productivity environment.
+
+---
+
+## What’s next?
+
+Part 2 will show you how to:
+
+- spin up **LLM API** using docker containers (Ollama + OpenWebUI) inside WSL 2 visually through Portainer Stacks.
+
+---
+
+### Quick recap
+
+| We did                  | Why it matters                                           |
+| ----------------------- | -------------------------------------------------------- |
+| Installed WSL 2         | Performant Linux Dev Environment Integrated with Windows |
+| Installed Docker Engine | Containerization Backbone                                |
+| Deployed Portainer      | Visual Docker Container Management & Orchestration       |
