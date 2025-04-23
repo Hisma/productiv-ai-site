@@ -206,7 +206,7 @@ Test the API by starting a new chat, selecting an OpenAI model from the dropdown
 
 ## Configure Ollama (If using local AI)
 
-From the same “connections” menu we added our OpenAI connection, Under “Manage Ollama API Connections”, confirm you see the connection we configured as an environment variable when we set up docker container `OLLAMA_BASE_URL=http://ollama:11434`. 
+From the same “connections” menu we added our OpenAI connection, Under “Manage Ollama API Connections”, confirm you see the connection we configured as an environment variable when we set up docker container `OLLAMA_BASE_URL=http://ollama:11434`.
 
 ![image-20250420-184125.png](./attachments/image-20250420-184125.png)
 

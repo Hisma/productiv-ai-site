@@ -1,0 +1,15 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    ".astro/types.d.ts", // Astro’s generated types
+    "src/**/*.{ts,tsx,astro}", // your site’s code
+    "content.config.ts" // your content config
+  ],
+  "exclude": [
+    "dist" // only need to exclude your output
+  ]
+}

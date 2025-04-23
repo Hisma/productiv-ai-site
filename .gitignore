@@ -1,7 +1,8 @@
 # Ignore everything by default
-*
+
 
 # Allow these explicitly
+!astro.config.mjs
 !.gitignore
 !README.md
 !netlify.toml

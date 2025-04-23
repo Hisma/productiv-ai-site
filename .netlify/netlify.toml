@@ -1,0 +1,47 @@
+headersOrigin = "inline"
+functionsDirectory = "/config/workspace/productiv-ai-site/netlify/functions"
+functionsDirectoryOrigin = "config-v1"
+redirects = []
+
+[images]
+remote_images = []
+
+[functions]
+
+[functions."*"]
+
+[[plugins]]
+origin = "config"
+package = "@netlify/plugin-lighthouse"
+
+[plugins.inputs]
+output_path = "reports/lighthouse.html"
+
+[build]
+publish = "/config/workspace/productiv-ai-site/dist"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "pnpm install && pnpm astro sync && pnpm format && pnpm lint && pnpm check && pnpm build"
+functions = "/config/workspace/productiv-ai-site/netlify/functions"
+
+[build.environment]
+NODE_VERSION = "22"
+SHARP_IGNORE_GLOBAL = "true"
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[[headers]]
+for = "/_astro/*"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
