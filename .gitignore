@@ -1,5 +1,7 @@
 # Ignore everything by default
-
+# Don't ever track local dependencies
+node_modules/
+.netlify/plugins/
 
 # Allow these explicitly
 !astro.config.mjs
