@@ -27,7 +27,6 @@ pnpm-debug.log*
 # Config files (hiding potentially sensitive settings)
 tsconfig.json
 pnpm-lock.yaml
-netlify.toml
 package.json
 
 # Exceptions - files to keep visible

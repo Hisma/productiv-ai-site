@@ -1,0 +1,23 @@
+[build]
+  command = "pnpm install && pnpm astro sync && pnpm format && pnpm lint && pnpm check && pnpm build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # This ensures Sharp is available during build
+  SHARP_IGNORE_GLOBAL = "true"
+
+# Different environments
+[context.production]
+  command = "pnpm install && pnpm astro sync && pnpm format && pnpm lint && pnpm check && pnpm build"
+
+[context.deploy-preview]
+  command = "pnpm install && pnpm astro sync && pnpm format && pnpm lint && pnpm check && pnpm build"
+
+# Optional: Add plugins for additional checks
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+  
+  [plugins.inputs]
+    output_path = "reports/lighthouse.html"
