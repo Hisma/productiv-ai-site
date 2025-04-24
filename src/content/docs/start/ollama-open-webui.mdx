@@ -19,7 +19,7 @@ sudo apt-get update
 sudo apt-get -y install cuda-toolkit-12-5
 ```
 
-- **note** \- that’s for WSL2 users. For ubuntu (enter the version of ubuntu corresponding to your distro - this is ubuntu 24.04) -
+- **note** - that’s for WSL2 users. For non-WSL2 Ubuntu users (enter the version of ubuntu corresponding to your distro - this is ubuntu 24.04) -
 
 ```bash
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
@@ -95,11 +95,6 @@ services:
       - docker_default
 
   open-webui:
-    build:
-      context: .
-      args:
-        OLLAMA_BASE_URL: "/ollama"
-      dockerfile: Dockerfile
     image: ghcr.io/open-webui/open-webui:dev-cuda
     container_name: open-webui
     volumes:
