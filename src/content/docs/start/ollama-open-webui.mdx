@@ -138,12 +138,7 @@ If you don’t have an nvidia GPU and/or don't want to install ollama (I promise
 ```yaml
 services:
   open-webui:
-    build:
-      context: .
-      args:
-        OLLAMA_BASE_URL: "/ollama"
-      dockerfile: Dockerfile
-    image: ghcr.io/open-webui/open-webui:dev-cuda
+    image: ghcr.io/open-webui/open-webui:latest
     container_name: open-webui
     volumes:
       - open-webui:/app/backend/data
