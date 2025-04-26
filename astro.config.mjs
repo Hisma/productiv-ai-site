@@ -19,9 +19,9 @@ export default defineConfig({
       customCss: ["./src/styles/global.css"],
       social: [
         {
-          icon: "medium",
-          label: "Medium",
-          href: "https://medium.com/@richard.meyer596",
+          icon: "github",
+          label: "Github",
+          href: "https://github.com/Hisma/productiv-ai-site",
         },
       ],
       sidebar: [
