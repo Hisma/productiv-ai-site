@@ -1,5 +1,5 @@
 ---
-title: "Setup Up OpenWebUI with Ollama"
+title: "Set Up OpenWebUI with Ollama"
 description: "The second step in our ‘ProductivAI’ series: Install OpenWebUI and Ollama as microservices to enable local LLM useage (ollama), as well as a slick UI for using MCPs, RAG, and more (OpenWebUI)."
 ---
 
@@ -137,7 +137,7 @@ Now you have full control over the stack via portainer and can update and modify
 
 ![image-20240711-074546.png](./attachments/image-20240711-074546.png)
 
-If you don’t have an nvidia GPU and/or don't want to install ollama (I promise it’s just a nice to have not a need to have), you have a much simpler docker compose file that just installs OpenWebUI -
+If you don’t have an nvidia GPU and/or don't want to install ollama, you have a much simpler docker compose file that just installs OpenWebUI -
 
 ```yaml
 services:
@@ -221,4 +221,4 @@ Select the option to pull the model and it will automatically pull the model and
 
 All set!
 
-Now we can use OpenWebUI as our interface for creating a RAG pipeline (local knowledge-base), agentic AI workflows, tool usage, and more.
+Now we can use OpenWebUI as our interface for creating a RAG pipeline (local knowledge-base), agentic AI workflows, tool usage, and more. We'll explore RAG and creating a local knowledgebase in OpenWebUI next.
