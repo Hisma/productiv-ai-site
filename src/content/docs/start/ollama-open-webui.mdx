@@ -7,8 +7,26 @@ import { YouTube } from "astro-embed";
 
 <YouTube id="GDqLje4SobM" />
 
-OpenWebUI offers a comprehensive interface for chat models, tools, RAG, and MCPs. While Ollama provides an easy way to run models locally, you'll need an Nvidia GPU (8GB+ RAM) for optimal performance. Without a suitable GPU, you can skip the Ollama installation entirely.
-Most users will achieve better productivity using API services like OpenAI, Google, or Anthropic rather than running models locally. If you have an Nvidia GPU and want to set up Ollama, continue to the next step; otherwise, skip the Ollama-specific steps.
+# Why Ollama + OpenWebUI?
+
+Ollama paired with OpenWebUI delivers the best of both worlds — powerful AI capabilities with a user-friendly interface.
+
+**Ollama** runs advanced language models locally on your machine, giving you privacy, control, and cost savings compared to cloud-based alternatives. It handles the complex technical aspects of running models like LLaMA, Mistral, and Gemma efficiently on your hardware.
+
+**OpenWebUI** transforms this powerful backend into something anyone can use. Its intuitive chat interface feels familiar if you've used ChatGPT, but with key advantages:
+
+* **Mix and match models**: Easily switch between local models or connect to OpenAI for the best of both worlds
+* **Document-enhanced conversations**: Upload files and use Retrieval-Augmented Generation (RAG) to get answers based on your own data
+* **Python tools and extensions**: Add capabilities like web search, image generation, or data analysis that your AI can use during conversations
+* **Model Context Protocol (MCP) support**: Connect your AI to external tools and data sources like Figma design files, Obsidian notes, Gmail for email management, and even Blender for 3D modeling, all through natural language
+* **Complete control**: Customize prompts, manage multiple models, and ensure your data stays private when needed
+
+Whether you're a developer looking to build custom AI solutions or simply want a ChatGPT-like experience without subscription costs, this combination gives you flexibility without requiring deep technical knowledge.
+
+## Is Ollama for you?
+
+While Ollama provides an easy way to run models locally, this lesson assumes you have an Nvidia GPU with 8GB+ of RAM. While it's possible to run Ollama effectively on AMD and certain Mac hardware, they require different set up which is beyond the scope of this article. 
+If you don't have an Nvidia GPU in your machine, you can skip Ollama installation and just install OpenWebUI. Don't fret however, you'll still have a powerful local AI platform with OpenWebUI alone by integrating it with OpenAI using an API key, which this lesson also covers. But if you have an Nvidia GPU and want to set up Ollama, continue to the next step; otherwise, you can skip the Ollama-specific steps.
 
 ## Pre-Reqs For Ollama Nvidia GPU Setup
 
