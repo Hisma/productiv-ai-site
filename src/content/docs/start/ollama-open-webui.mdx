@@ -15,17 +15,17 @@ Ollama paired with OpenWebUI delivers the best of both worlds — powerful AI ca
 
 **OpenWebUI** transforms this powerful backend into something anyone can use. Its intuitive chat interface feels familiar if you've used ChatGPT, but with key advantages:
 
-* **Mix and match models**: Easily switch between local models or connect to OpenAI for the best of both worlds
-* **Document-enhanced conversations**: Upload files and use Retrieval-Augmented Generation (RAG) to get answers based on your own data
-* **Python tools and extensions**: Add capabilities like web search, image generation, or data analysis that your AI can use during conversations
-* **Model Context Protocol (MCP) support**: Connect your AI to external tools and data sources like Figma design files, Obsidian notes, Gmail for email management, and even Blender for 3D modeling, all through natural language
-* **Complete control**: Customize prompts, manage multiple models, and ensure your data stays private when needed
+- **Mix and match models**: Easily switch between local models or connect to OpenAI for the best of both worlds
+- **Document-enhanced conversations**: Upload files and use Retrieval-Augmented Generation (RAG) to get answers based on your own data
+- **Python tools and extensions**: Add capabilities like web search, image generation, or data analysis that your AI can use during conversations
+- **Model Context Protocol (MCP) support**: Connect your AI to external tools and data sources like Figma design files, Obsidian notes, Gmail for email management, and even Blender for 3D modeling, all through natural language
+- **Complete control**: Customize prompts, manage multiple models, and ensure your data stays private when needed
 
 Whether you're a developer looking to build custom AI solutions or simply want a ChatGPT-like experience without subscription costs, this combination gives you flexibility without requiring deep technical knowledge.
 
 ## Is Ollama for you?
 
-While Ollama provides an easy way to run models locally, this lesson assumes you have an Nvidia GPU with 8GB+ of RAM. While it's possible to run Ollama effectively on AMD and certain Mac hardware, they require different set up which is beyond the scope of this article. 
+While Ollama provides an easy way to run models locally, this lesson assumes you have an Nvidia GPU with 8GB+ of RAM. While it's possible to run Ollama effectively on AMD and certain Mac hardware, they require different set up which is beyond the scope of this article.
 If you don't have an Nvidia GPU in your machine, you can skip Ollama installation and just install OpenWebUI. Don't fret however, you'll still have a powerful local AI platform with OpenWebUI alone by integrating it with OpenAI using an API key, which this lesson also covers. But if you have an Nvidia GPU and want to set up Ollama, continue to the next step; otherwise, you can skip the Ollama-specific steps.
 
 ## Pre-Reqs For Ollama Nvidia GPU Setup
@@ -84,6 +84,38 @@ sudo nvidia-ctk runtime configure --runtime=docker
 sudo systemctl restart docker
 ```
 
+Now before we install the containers, let's create some local directories to mount to our host so we can easily pass data in/out of each container. 
+In later lessons we will revisit these directories.
+```bash
+mkdir -p ~/docker/ollama && mkdir -p ~/docker/owui
+```
+
+One last step... there's a valuable tool called `nvidia-smi`.  It's already installed at `/usr/lib/wsl/lib`, but by default, our WLS2 linux instance doesn't have it as a PATH variable, so let's add it.
+
+Here’s that section converted into proper Markdown:
+
+1. **Edit your Bash configuration**  
+```bash
+sudo nano ~/.bashrc
+```
+2. **Scroll to the bottom** of the file and **add** the following lines:  
+```bash
+# Add NVIDIA utilities to PATH
+export PATH="$PATH:/usr/lib/wsl/lib"
+```
+3. **Save and exit** the editor  
+   - In **Nano**, press `Ctrl + O`, then `Enter`, then `Ctrl + X`.
+4. **Reload your Bash configuration** so you don’t have to restart the terminal:  
+```bash
+source ~/.bashrc
+```
+5. **Verify** that `nvidia-smi` is now in your `PATH` by running:  
+```bash
+nvidia-smi
+```  
+You should see your GPU status information in the output.
+![nvidia-smi.png](./attachments/nvidia-smi.png)
+
 Now you're ready to install ollama and spin up local AI models.
 
 ## Create a Stack for Ollama & OpenWebUI
@@ -98,7 +130,7 @@ Here’s the stack config if you are building ollama with an Nvidia GPU with ope
 services:
   ollama:
     volumes:
-      - ollama:/root/.ollama
+      - ~/docker/ollama:/root/.ollama
     deploy:
       resources:
         reservations:
@@ -120,7 +152,7 @@ services:
     image: ghcr.io/open-webui/open-webui:dev-cuda
     container_name: open-webui
     volumes:
-      - open-webui:/app/backend/data
+      - ~/docker/owui:/app/backend/data
     depends_on:
       - ollama
     deploy:
@@ -139,10 +171,6 @@ services:
     restart: unless-stopped
     networks:
       - docker_default
-
-volumes:
-  ollama: {}
-  open-webui: {}
 
 networks:
   docker_default:
@@ -163,7 +191,7 @@ services:
     image: ghcr.io/open-webui/open-webui:latest
     container_name: open-webui
     volumes:
-      - open-webui:/app/backend/data
+      - ~/docker/owui:/app/backend/data
     ports:
       - ${OPEN_WEBUI_PORT-3000}:8080
     environment:
@@ -172,9 +200,6 @@ services:
     restart: unless-stopped
     networks:
       - docker_default
-
-volumes:
-  open-webui: {}
 
 networks:
   docker_default:
