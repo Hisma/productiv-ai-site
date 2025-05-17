@@ -84,13 +84,6 @@ sudo nvidia-ctk runtime configure --runtime=docker
 sudo systemctl restart docker
 ```
 
-Now before we install the containers, let's create some local directories to mount to our host so we can easily pass data in/out of each container.
-In later lessons we will revisit these directories.
-
-```bash
-mkdir -p ~/docker/ollama && mkdir -p ~/docker/owui
-```
-
 One last step... there's a valuable tool called `nvidia-smi`. It's already installed at `/usr/lib/wsl/lib`, but by default, our WLS2 linux instance doesn't have it as a PATH variable, so let's add it.
 
 1. **Edit your Bash configuration**
@@ -137,7 +130,7 @@ Here’s the stack config if you are building ollama with an Nvidia GPU with ope
 services:
   ollama:
     volumes:
-      - ~/docker/ollama:/root/.ollama
+      - ollama:/root/.ollama
     deploy:
       resources:
         reservations:
@@ -159,7 +152,7 @@ services:
     image: ghcr.io/open-webui/open-webui:dev-cuda
     container_name: open-webui
     volumes:
-      - ~/docker/owui:/app/backend/data
+      - openweb-ui:/app/backend/data
     depends_on:
       - ollama
     deploy:
@@ -178,6 +171,10 @@ services:
     restart: unless-stopped
     networks:
       - docker_default
+
+volumes:
+  ollama:
+  open-webui:
 
 networks:
   docker_default:
@@ -198,7 +195,7 @@ services:
     image: ghcr.io/open-webui/open-webui:latest
     container_name: open-webui
     volumes:
-      - ~/docker/owui:/app/backend/data
+      - open-webui:/app/backend/data
     ports:
       - ${OPEN_WEBUI_PORT-3000}:8080
     environment:
@@ -207,6 +204,9 @@ services:
     restart: unless-stopped
     networks:
       - docker_default
+
+volumes:
+  open-webui:
 
 networks:
   docker_default:

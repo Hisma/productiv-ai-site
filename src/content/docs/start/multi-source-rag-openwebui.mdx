@@ -1,0 +1,424 @@
+---
+title: "Implement Multi-Source RAG with Hybrid Search and Re-ranking in OpenWebUI"
+description: "Learn how to set up a powerful Retrieval-Augmented Generation (RAG) pipeline in OpenWebUI that combines local knowledge bases with web search, using hybrid retrieval and re-ranking for more accurate AI responses."
+---
+
+import { YouTube } from "astro-embed";
+
+<YouTube id="cd2OhuWcpYg" />
+
+## Understanding Multi-Source RAG with Hybrid Search and Re-ranking
+
+Retrieval-Augmented Generation (RAG) is a powerful technique that enhances Large Language Models (LLMs) by grounding their responses in factual, relevant information. Instead of relying solely on the model's pre-trained knowledge, RAG retrieves specific information from external sources and uses it as context for generating responses.
+
+Our implementation takes RAG to the next level with three key enhancements:
+
+1. **Multi-Source Retrieval**: Pulls information from both your local knowledge base (documents you upload) and the web via Brave Search API, giving your AI access to both your private documents and the latest information online.
+
+2. **Hybrid Search**: Combines two complementary search methods:
+   - **Dense Semantic Search**: Captures conceptual similarity using vector embeddings, finding relevant content even when exact keywords don't match
+   - **Sparse Keyword Search**: Ensures important keywords are matched, similar to traditional search engines
+
+3. **Re-ranking**: Applies a specialized model to evaluate and sort the retrieved information based on its relevance to your specific question, ensuring the most useful context is prioritized.
+
+This approach delivers more accurate, trustworthy AI responses with several benefits:
+- Better factual grounding through diverse information sources
+- Improved retrieval accuracy through complementary search methods
+- Enhanced relevance through intelligent re-ranking
+- Reduced hallucinations by providing high-quality context
+- Auditability through source citations
+
+## RAG Pipeline Architecture
+
+![Multi-Source RAG with Hybrid Search and Re-Ranking Architecture](/src/content/docs/start/attachments/rag-openwebui/rag-architecture-diagram.png)
+
+Here's how our multi-source RAG pipeline works:
+
+1. **Document Processing**: Upload documents to Apache Tika, which extracts text and metadata from various file formats (PDF, DOCX, PPT, etc.)
+
+2. **Document Embedding**: The extracted text is chunked and converted into vector embeddings using a model like text-embedding-3-small, then stored in a vector database
+
+3. **User Query**: When you ask a question, the system processes it through multiple retrieval paths
+
+4. **Multi-Source Retrieval**:
+   - **Local Knowledge Base**: Uses hybrid search (dense + sparse) to find relevant document chunks
+   - **Web Search**: Optionally retrieves information from the internet using Brave Search API
+
+5. **Re-ranking**: All retrieved results are scored by a cross-encoder re-ranker model (like bge-reranker-v2) based on their relevance to your question
+
+6. **Top-K Selection**: The most relevant information is selected and provided as context to the LLM
+
+7. **Response Generation**: The LLM generates an answer grounded in the provided context
+
+8. **Response Delivery**: You receive a contextually accurate answer with citations to the source documents
+
+## Prerequisites
+
+Before implementing this RAG pipeline, you'll need:
+
+- OpenWebUI and Ollama set up (see our [previous guide](./ollama-open-webui))
+- An OpenAI API key for embeddings (or a local embedding model)
+- A Brave Search API key (if you want to enable web search)
+
+## Implementation Steps
+
+Let's build our multi-source RAG pipeline step by step.
+
+### 1. Setting up Apache Tika
+
+First, we need to add Apache Tika to our existing Portainer stack. Tika will handle document processing and text extraction.
+
+1. In Portainer, navigate to your existing Ollama/OpenWebUI stack we created previously.
+2. Edit the stack configuration and add the Tika service:
+
+```yaml
+tika:
+  image: apache/tika:latest-full
+  container_name: tika
+  restart: on-failure
+  ports:
+    - "9998:9998" 
+  networks:
+    - docker_default
+```
+Our updated docker container stack should look similar to this if you configured ollama with an Nvidia GPU:
+
+```yaml
+services:
+  ollama:
+    volumes:
+      - ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    ports:
+      - 11434:11434
+    image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
+    networks:
+      - docker_default
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:dev-cuda
+    container_name: open-webui
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - ${OPEN_WEBUI_PORT-3000}:8080
+    environment:
+      - "OLLAMA_BASE_URL=http://ollama:11434"
+      - "WEBUI_SECRET_KEY="
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+    networks:
+      - docker_default
+
+  tika:
+    image: apache/tika:latest-full
+    container_name: tika
+    restart: unless-stopped
+    ports:
+      - 9998:9998 
+    networks:
+      - docker_default
+
+volumes:
+  ollama:
+  open-webui:
+
+networks:
+  docker_default:
+    external: true
+```
+
+If you didn't deploy ollama because you lack an Nvidia GPU, your stack should look similar to this - 
+
+```yaml
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: open-webui
+    volumes:
+      - open-webui:/app/backend/data
+    ports:
+      - ${OPEN_WEBUI_PORT-3000}:8080
+    environment:
+      - "WEBUI_SECRET_KEY="
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+    networks:
+      - docker_default
+
+  tika:
+    image: apache/tika:latest-full
+    container_name: tika
+    restart: unless-stopped
+    ports:
+      - 9998:9998 
+    networks:
+      - docker_default
+
+volumes:
+  open-webui:
+
+networks:
+  docker_default:
+    external: true
+```
+
+3. Deploy the updated stack
+4. Verify Tika is running by checking the container status in Portainer
+
+![Portainer Stack with Tika](/src/content/docs/start/attachments/rag-openwebui/tika-stack.png)
+
+### 2. Configuring Document Processing in OpenWebUI
+
+Now, let's configure OpenWebUI to use Tika for document processing:
+
+1. Log in to OpenWebUI
+2. Click on your user profile at the bottom left
+3. Navigate to Settings → Admin Settings → Documents
+4. Configure the following settings:
+   - **Content Extraction Engine**: Select "Tika"
+   - **Tika URL**: `http://tika:9998`
+   - **Text Splitter**: "Token (Tiktoken)"
+   - **Chunk Size**: 500
+   - **Chunk Overlap**: 100
+
+These settings determine how documents are processed and split into manageable chunks. The chunk size of 500 tokens with a 100-token overlap provides a good balance between context preservation and retrieval granularity.
+
+### 3. Setting up Embedding
+
+Next, configure the embedding settings:
+
+1. In the same Documents settings page, scroll down to the Embedding section
+2. Configure the following:
+   - **Embedding Model Engine**: Select "OpenAI"
+   - **OpenAI API URL**: `https://api.openai.com/v1`
+   - **Embedding Model**: `text-embedding-3-small`
+   - **Embedding Batch Size**: 1
+
+The embedding model converts text chunks into vector representations that capture semantic meaning, enabling similarity-based retrieval.
+
+### 4. Configuring Retrieval Settings
+
+Now, set up the hybrid search and re-ranking capabilities:
+
+1. Scroll down to the Retrieval section
+2. Configure the following settings:
+   - **Full Context Mode**: Enabled
+   - **Hybrid Search**: Enabled (this activates both dense and sparse search)
+   - **Top K**: 20 (number of initial candidates to retrieve)
+   - **Top K Reranker**: 10 (number of candidates after reranking)
+   - **Relevance Threshold**: 0 (or adjust based on your needs)
+
+3. For the re-ranking configuration, you have two options depending on your hardware:
+
+#### Option A: Local Re-ranking (Requires Nvidia GPU)
+   - **Reranking Engine**: "Default (SentenceTransformers)"
+   - **Reranking Model**: `BAI/bge-reranker-v2-m3`
+
+This option uses your local GPU to run the re-ranking model, which can provide faster processing, but requires you have required hardware and followed the Nvidia GPU setup. This is the recommended solution.
+- note: Fortunately the reranker is small and only consumes around 1GB of GPU VRAM.
+
+![Sentence Transformer Rerank Settings](/src/content/docs/start/attachments/rag-openwebui/sentence-transformer-rerank.png)
+
+#### Option B: External Re-ranking API (No GPU Required)
+   1. Create a free account at [Jina AI](https://jina.ai)
+   2. Once logged in, go to the [API Key Manager](https://jina.ai/api-dashboard/key-manager) and copy your API key
+   3. Navigate to the [Reranker page](https://jina.ai/api-dashboard/reranker) and note the re-ranking model and API URL
+   4. In OpenWebUI, configure:
+      - **Reranking Engine**: "External"
+      - **Reranking Engine URL**: `https://api.jina.ai/v1/rerank`
+      - **Reranking Model**: `jina-reranker-v2-base-multilingual`
+      - Enter your Jina API key in the password field
+
+![Jinja Rerank Dashboard](/src/content/docs/start/attachments/rag-openwebui/jinja-rerank.png)
+
+![Jinja Rerank Retrieval Settings](/src/content/docs/start/attachments/rag-openwebui/jinja-retrieval-settings.png)
+
+This external re-ranking option provides high-quality re-ranking capabilities without requiring local GPU resources. The trade-off is slower processing and our pipeline relying on another external source.
+
+Both options create a two-stage retrieval process: first gathering potential matches through hybrid search, then refining the results with the re-ranker model.
+
+Once completed, your OpenWebUI documentation settings should looks similar to this - 
+
+![OpenWebUI Documentation Settings](/src/content/docs/start/attachments/rag-openwebui/rag-settings.png)
+
+Press save and confirm you do not encounter any errors.
+
+### 5. Setting up Brave Search for Web Retrieval
+
+To enable web search as an additional information source:
+
+1. Obtain a Brave Search API key from [https://brave.com/search/api/](https://brave.com/search/api/)
+2. In OpenWebUI, navigate to Settings → Admin Settings → Web Search
+3. Configure the following:
+   - Enable Web Search (toggle on)
+   - **Web Search Engine**: "brave"
+   - **Brave Search API Key**: Enter your API key
+   - **Search Result Count**: 3
+   - **Concurrent Requests**: 10
+   - Optional: Add domain filters if you want to restrict web search to specific sites
+
+With web search enabled, your RAG system can now retrieve information from both your local knowledge base and the internet.
+
+![Brave Search Settings](/src/content/docs/start/attachments/rag-openwebui/brave-search.png)
+
+## Creating Your First Knowledge Base
+
+Now that we've set up all the components of our RAG pipeline, let's create a knowledge base with actual content:
+
+### 1. Download and Extract the OpenWebUI Documentation
+
+1. Download the latest documentation from GitHub: https://github.com/open-webui/docs/archive/refs/heads/main.zip
+2. Extract the main.zip file to a location on your computer
+3. Navigate to the extracted folder structure, which should look like: `docs-main/docs/` or something similar
+
+![OpenWebUI Documentation Files](/src/content/docs/start/attachments/rag-openwebui/docs-folder.png)
+
+4. The innermost `docs` folder is what we need - this contains all the markdown (.md and .mdx) files that will form our knowledge base
+5. These markdown files contain the official OpenWebUI documentation in a format that's ideal for our RAG system
+
+### 2. Create a Knowledge Base in OpenWebUI
+
+1. Navigate to Workspace > Knowledge > + Create a Knowledge Base
+2. Name it: "Open WebUI Documentation"
+3. Purpose: Assistance
+4. Click "Create Knowledge"
+
+![Knowledge Base Creation Interface](/src/content/docs/start/attachments/rag-openwebui/create-knowledge.png)
+
+### 3. Upload the Documentation Files
+
+1. Click the "+" button on the far right to add content
+2. Select "Upload directory" from the dropdown menu
+
+![Upload Knowledge Folder](/src/content/docs/start/attachments/rag-openwebui/upload-knowledge.png)
+
+3. Navigate to the innermost `docs` directory containing the markdown files
+4. Select the folder and click "Select Folder"
+
+![Select Folder](/src/content/docs/start/attachments/rag-openwebui/select-folder.png)
+
+5. Wait for the system to upload and process all documents (you'll see an upload progress indicator showing the number of files being processed)
+
+![Upload Progress](/src/content/docs/start/attachments/rag-openwebui/upload-progress.png)
+6. Behind the scenes, Apache Tika is parsing the markdown documents according to your configured settings
+7. The system is chunking the content, generating vector embeddings using your configured embedding model, and storing these in the vector database
+8. The system will automatically process all files in subdirectories like features, getting-started, etc.
+
+## Creating a Custom RAG-Enabled Model
+
+After creating your knowledge base, the next step is to create a custom model that will use this knowledge base for RAG:
+
+### 1. Navigate to Models
+
+1. Go to Workspace > Models > + Add New Model
+
+### 2. Configure the Model
+
+1. Name: GPT 4.1 with OpenWebUI RAG
+2. Base Model: Select "GPT 4.1" (or another model of your choice)
+3. Knowledge Source: Select "Open WebUI Documentation" from the dropdown
+4. Save the Model
+
+![Custom Model Creation](/src/content/docs/start/attachments/rag-openwebui/custom-model.png)
+
+This configuration connects your chosen LLM with the knowledge base we just created, enabling the RAG capabilities we've set up.
+
+## Testing Your Multi-Source RAG Pipeline
+
+Now let's test our implementation with some example queries:
+
+### 1. Start a New Chat
+
+1. Navigate to New Chat
+2. Select the custom model we just created: "GPT 4.1 with OpenWebUI RAG"
+
+### 2. Example Queries
+
+1. Try asking: "How do I configure environment variables?"
+
+The system responds with contextually aware details related to configuring environment variables in OpenWebUi, pulled from sources in our knowledgebase.
+
+![Environment Variable Chat](/src/content/docs/start/attachments/rag-openwebui/env-variable-chat.png)
+
+### 3. Understanding What's Happening
+
+1. When you ask a question, the system uses hybrid search (dense + sparse) to find relevant content in your knowledge base
+2. The re-ranker evaluates and prioritizes the most relevant chunks based on your query
+3. The LLM generates a response using the retrieved context
+4. Citations are provided so you can verify the sources
+
+You can review the citations by clicking one of the reference links at the end of the response. The references are sorted by relevance score, with the highest-scoring source listed first.
+
+![Citation Popup](/src/content/docs/start/attachments/rag-openwebui/citation.png)
+
+The relevancy score (0-1) indicates how well each document chunk matches your query:
+- **Higher scores (0.8-1.0)**: Strong relevance, containing information directly answering your question
+- **Medium scores (0.5-0.8)**: Partial relevance, providing supporting context
+- **Lower scores (below 0.5)**: Weaker relevance, may contain keywords but less directly applicable
+
+This scoring system helps you verify source quality, identify primary vs. supplementary information, and understand why certain content was prioritized in the response.
+
+### 4. Testing Multi-Source Retrieval
+
+1. Enable web search by clicking the "Web Search" button in the chat interface (globe icon)
+
+![Web Search Toggle](/src/content/docs/start/attachments/rag-openwebui/web-search.png)
+2. You can toggle web search on or off at any time during your conversation
+   - With web search ON: The system will retrieve information from both your knowledge base and the internet
+   - With web search OFF: The system will only use your local knowledge base
+3. Try asking a question that might not be in your knowledge base with web search enabled
+4. Notice how the response combines information from both sources with appropriate citations
+
+This flexibility allows you to control exactly which information sources you want to use for each query. For technical documentation or private information, you might prefer to use only the knowledge base. For current events or general knowledge, enabling web search provides more comprehensive, real-time responses.
+
+## Advanced Configuration and Optimization
+
+To get the most out of your RAG pipeline, consider these optimizations:
+
+### Adjusting Chunk Size and Overlap
+
+- **Smaller chunks** (200-300 tokens) work better for precise factual retrieval
+- **Larger chunks** (800-1000 tokens) preserve more context for complex topics
+- **Increase overlap** for documents with dense, interconnected information
+
+### Fine-tuning Retrieval Parameters
+
+- Increase **Top K** for broader coverage at the cost of processing time
+- Adjust the **Relevance Threshold** to filter out less relevant results
+- Experiment with different **re-ranking models** for your specific use case
+
+### Optimizing for Different Document Types
+
+- Technical documentation benefits from smaller chunks and higher Top K values
+- Narrative content works better with larger chunks and more overlap
+
+## Conclusion
+
+You've now implemented a sophisticated multi-source RAG pipeline with hybrid search and re-ranking in OpenWebUI. This system provides:
+
+- More accurate and trustworthy AI responses
+- Flexibility to retrieve information from both local documents and the web
+- Enhanced retrieval capabilities through complementary search methods
+- Improved relevance through intelligent re-ranking
+
+This implementation represents a significant advancement over basic RAG systems, providing a powerful foundation for knowledge-intensive AI applications. In future articles, we'll explore how to extend this system with custom tools and agents for even more capabilities.
