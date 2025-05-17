@@ -16,12 +16,14 @@ Our implementation takes RAG to the next level with three key enhancements:
 1. **Multi-Source Retrieval**: Pulls information from both your local knowledge base (documents you upload) and the web via Brave Search API, giving your AI access to both your private documents and the latest information online.
 
 2. **Hybrid Search**: Combines two complementary search methods:
+
    - **Dense Semantic Search**: Captures conceptual similarity using vector embeddings, finding relevant content even when exact keywords don't match
    - **Sparse Keyword Search**: Ensures important keywords are matched, similar to traditional search engines
 
 3. **Re-ranking**: Applies a specialized model to evaluate and sort the retrieved information based on its relevance to your specific question, ensuring the most useful context is prioritized.
 
 This approach delivers more accurate, trustworthy AI responses with several benefits:
+
 - Better factual grounding through diverse information sources
 - Improved retrieval accuracy through complementary search methods
 - Enhanced relevance through intelligent re-ranking
@@ -41,6 +43,7 @@ Here's how our multi-source RAG pipeline works:
 3. **User Query**: When you ask a question, the system processes it through multiple retrieval paths
 
 4. **Multi-Source Retrieval**:
+
    - **Local Knowledge Base**: Uses hybrid search (dense + sparse) to find relevant document chunks
    - **Web Search**: Optionally retrieves information from the internet using Brave Search API
 
@@ -77,10 +80,11 @@ tika:
   container_name: tika
   restart: on-failure
   ports:
-    - "9998:9998" 
+    - "9998:9998"
   networks:
     - docker_default
 ```
+
 Our updated docker container stack should look similar to this if you configured ollama with an Nvidia GPU:
 
 ```yaml
@@ -134,7 +138,7 @@ services:
     container_name: tika
     restart: unless-stopped
     ports:
-      - 9998:9998 
+      - 9998:9998
     networks:
       - docker_default
 
@@ -147,7 +151,7 @@ networks:
     external: true
 ```
 
-If you didn't deploy ollama because you lack an Nvidia GPU, your stack should look similar to this - 
+If you didn't deploy ollama because you lack an Nvidia GPU, your stack should look similar to this -
 
 ```yaml
 services:
@@ -170,7 +174,7 @@ services:
     container_name: tika
     restart: unless-stopped
     ports:
-      - 9998:9998 
+      - 9998:9998
     networks:
       - docker_default
 
@@ -222,6 +226,7 @@ Now, set up the hybrid search and re-ranking capabilities:
 
 1. Scroll down to the Retrieval section
 2. Configure the following settings:
+
    - **Full Context Mode**: Enabled
    - **Hybrid Search**: Enabled (this activates both dense and sparse search)
    - **Top K**: 20 (number of initial candidates to retrieve)
@@ -231,23 +236,26 @@ Now, set up the hybrid search and re-ranking capabilities:
 3. For the re-ranking configuration, you have two options depending on your hardware:
 
 #### Option A: Local Re-ranking (Requires Nvidia GPU)
-   - **Reranking Engine**: "Default (SentenceTransformers)"
-   - **Reranking Model**: `BAI/bge-reranker-v2-m3`
+
+- **Reranking Engine**: "Default (SentenceTransformers)"
+- **Reranking Model**: `BAI/bge-reranker-v2-m3`
 
 This option uses your local GPU to run the re-ranking model, which can provide faster processing, but requires you have required hardware and followed the Nvidia GPU setup. This is the recommended solution.
+
 - note: Fortunately the reranker is small and only consumes around 1GB of GPU VRAM.
 
 ![Sentence Transformer Rerank Settings](/src/content/docs/start/attachments/rag-openwebui/sentence-transformer-rerank.png)
 
 #### Option B: External Re-ranking API (No GPU Required)
-   1. Create a free account at [Jina AI](https://jina.ai)
-   2. Once logged in, go to the [API Key Manager](https://jina.ai/api-dashboard/key-manager) and copy your API key
-   3. Navigate to the [Reranker page](https://jina.ai/api-dashboard/reranker) and note the re-ranking model and API URL
-   4. In OpenWebUI, configure:
-      - **Reranking Engine**: "External"
-      - **Reranking Engine URL**: `https://api.jina.ai/v1/rerank`
-      - **Reranking Model**: `jina-reranker-v2-base-multilingual`
-      - Enter your Jina API key in the password field
+
+1.  Create a free account at [Jina AI](https://jina.ai)
+2.  Once logged in, go to the [API Key Manager](https://jina.ai/api-dashboard/key-manager) and copy your API key
+3.  Navigate to the [Reranker page](https://jina.ai/api-dashboard/reranker) and note the re-ranking model and API URL
+4.  In OpenWebUI, configure:
+    - **Reranking Engine**: "External"
+    - **Reranking Engine URL**: `https://api.jina.ai/v1/rerank`
+    - **Reranking Model**: `jina-reranker-v2-base-multilingual`
+    - Enter your Jina API key in the password field
 
 ![Jinja Rerank Dashboard](/src/content/docs/start/attachments/rag-openwebui/jinja-rerank.png)
 
@@ -257,7 +265,7 @@ This external re-ranking option provides high-quality re-ranking capabilities wi
 
 Both options create a two-stage retrieval process: first gathering potential matches through hybrid search, then refining the results with the re-ranker model.
 
-Once completed, your OpenWebUI documentation settings should looks similar to this - 
+Once completed, your OpenWebUI documentation settings should looks similar to this -
 
 ![OpenWebUI Documentation Settings](/src/content/docs/start/attachments/rag-openwebui/rag-settings.png)
 
@@ -319,10 +327,7 @@ Now that we've set up all the components of our RAG pipeline, let's create a kno
 
 5. Wait for the system to upload and process all documents (you'll see an upload progress indicator showing the number of files being processed)
 
-![Upload Progress](/src/content/docs/start/attachments/rag-openwebui/upload-progress.png)
-6. Behind the scenes, Apache Tika is parsing the markdown documents according to your configured settings
-7. The system is chunking the content, generating vector embeddings using your configured embedding model, and storing these in the vector database
-8. The system will automatically process all files in subdirectories like features, getting-started, etc.
+![Upload Progress](/src/content/docs/start/attachments/rag-openwebui/upload-progress.png) 6. Behind the scenes, Apache Tika is parsing the markdown documents according to your configured settings 7. The system is chunking the content, generating vector embeddings using your configured embedding model, and storing these in the vector database 8. The system will automatically process all files in subdirectories like features, getting-started, etc.
 
 ## Creating a Custom RAG-Enabled Model
 
@@ -372,6 +377,7 @@ You can review the citations by clicking one of the reference links at the end o
 ![Citation Popup](/src/content/docs/start/attachments/rag-openwebui/citation.png)
 
 The relevancy score (0-1) indicates how well each document chunk matches your query:
+
 - **Higher scores (0.8-1.0)**: Strong relevance, containing information directly answering your question
 - **Medium scores (0.5-0.8)**: Partial relevance, providing supporting context
 - **Lower scores (below 0.5)**: Weaker relevance, may contain keywords but less directly applicable
@@ -382,10 +388,11 @@ This scoring system helps you verify source quality, identify primary vs. supple
 
 1. Enable web search by clicking the "Web Search" button in the chat interface (globe icon)
 
-![Web Search Toggle](/src/content/docs/start/attachments/rag-openwebui/web-search.png)
-2. You can toggle web search on or off at any time during your conversation
-   - With web search ON: The system will retrieve information from both your knowledge base and the internet
-   - With web search OFF: The system will only use your local knowledge base
+![Web Search Toggle](/src/content/docs/start/attachments/rag-openwebui/web-search.png) 2. You can toggle web search on or off at any time during your conversation
+
+- With web search ON: The system will retrieve information from both your knowledge base and the internet
+- With web search OFF: The system will only use your local knowledge base
+
 3. Try asking a question that might not be in your knowledge base with web search enabled
 4. Notice how the response combines information from both sources with appropriate citations
 
