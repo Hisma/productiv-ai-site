@@ -32,7 +32,7 @@ This approach delivers more accurate, trustworthy AI responses with several bene
 
 ## RAG Pipeline Architecture
 
-![Multi-Source RAG with Hybrid Search and Re-Ranking Architecture](./attachments/rag-openwebui/rag-architecture-diagram.png)
+<img src="./attachments/rag-openwebui/rag-architecture-diagram.svg" alt="Multi-Source RAG with Hybrid Search and Re-Ranking Architecture" />
 
 Here's how our multi-source RAG pipeline works:
 
@@ -327,7 +327,11 @@ Now that we've set up all the components of our RAG pipeline, let's create a kno
 
 5. Wait for the system to upload and process all documents (you'll see an upload progress indicator showing the number of files being processed)
 
-![Upload Progress](./attachments/rag-openwebui/upload-progress.png) 6. Behind the scenes, Apache Tika is parsing the markdown documents according to your configured settings 7. The system is chunking the content, generating vector embeddings using your configured embedding model, and storing these in the vector database 8. The system will automatically process all files in subdirectories like features, getting-started, etc.
+![Upload Progress](./attachments/rag-openwebui/upload-progress.png) 
+
+6. Behind the scenes, Apache Tika is parsing the markdown documents according to your configured settings 
+7. The system is chunking the content, generating vector embeddings using your configured embedding model, and storing these in the vector database 
+8. The system will automatically process all files in subdirectories like features, getting-started, etc.
 
 ## Creating a Custom RAG-Enabled Model
 
@@ -361,7 +365,7 @@ Now let's test our implementation with some example queries:
 
 1. Try asking: "How do I configure environment variables?"
 
-The system responds with contextually aware details related to configuring environment variables in OpenWebUi, pulled from sources in our knowledgebase.
+The system responds with contextually aware details related to configuring environment variables in OpenWebUI, pulled from sources in our knowledgebase.
 
 ![Environment Variable Chat](./attachments/rag-openwebui/env-variable-chat.png)
 
