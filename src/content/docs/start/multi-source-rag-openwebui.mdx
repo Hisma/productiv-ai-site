@@ -32,7 +32,7 @@ This approach delivers more accurate, trustworthy AI responses with several bene
 
 ## RAG Pipeline Architecture
 
-![Multi-Source RAG with Hybrid Search and Re-Ranking Architecture](/src/content/docs/start/attachments/rag-openwebui/rag-architecture-diagram.png)
+![Multi-Source RAG with Hybrid Search and Re-Ranking Architecture](./attachments/rag-openwebui/rag-architecture-diagram.png)
 
 Here's how our multi-source RAG pipeline works:
 
@@ -59,7 +59,7 @@ Here's how our multi-source RAG pipeline works:
 
 Before implementing this RAG pipeline, you'll need:
 
-- OpenWebUI and Ollama set up (see our [previous guide](./ollama-open-webui))
+- OpenWebUI and Ollama set up (see our [previous guide](/start/ollama-open-webui))
 - An OpenAI API key for embeddings (or a local embedding model)
 - A Brave Search API key (if you want to enable web search)
 
@@ -189,7 +189,7 @@ networks:
 3. Deploy the updated stack
 4. Verify Tika is running by checking the container status in Portainer
 
-![Portainer Stack with Tika](/src/content/docs/start/attachments/rag-openwebui/tika-stack.png)
+![Portainer Stack with Tika](./attachments/rag-openwebui/tika-stack.png)
 
 ### 2. Configuring Document Processing in OpenWebUI
 
@@ -244,7 +244,7 @@ This option uses your local GPU to run the re-ranking model, which can provide f
 
 - note: Fortunately the reranker is small and only consumes around 1GB of GPU VRAM.
 
-![Sentence Transformer Rerank Settings](/src/content/docs/start/attachments/rag-openwebui/sentence-transformer-rerank.png)
+![Sentence Transformer Rerank Settings](./attachments/rag-openwebui/sentence-transformer-rerank.png)
 
 #### Option B: External Re-ranking API (No GPU Required)
 
@@ -257,9 +257,9 @@ This option uses your local GPU to run the re-ranking model, which can provide f
     - **Reranking Model**: `jina-reranker-v2-base-multilingual`
     - Enter your Jina API key in the password field
 
-![Jinja Rerank Dashboard](/src/content/docs/start/attachments/rag-openwebui/jinja-rerank.png)
+![Jinja Rerank Dashboard](./attachments/rag-openwebui/jinja-rerank.png)
 
-![Jinja Rerank Retrieval Settings](/src/content/docs/start/attachments/rag-openwebui/jinja-retrieval-settings.png)
+![Jinja Rerank Retrieval Settings](./attachments/rag-openwebui/jinja-retrieval-settings.png)
 
 This external re-ranking option provides high-quality re-ranking capabilities without requiring local GPU resources. The trade-off is slower processing and our pipeline relying on another external source.
 
@@ -267,7 +267,7 @@ Both options create a two-stage retrieval process: first gathering potential mat
 
 Once completed, your OpenWebUI documentation settings should looks similar to this -
 
-![OpenWebUI Documentation Settings](/src/content/docs/start/attachments/rag-openwebui/rag-settings.png)
+![OpenWebUI Documentation Settings](./attachments/rag-openwebui/rag-settings.png)
 
 Press save and confirm you do not encounter any errors.
 
@@ -287,7 +287,7 @@ To enable web search as an additional information source:
 
 With web search enabled, your RAG system can now retrieve information from both your local knowledge base and the internet.
 
-![Brave Search Settings](/src/content/docs/start/attachments/rag-openwebui/brave-search.png)
+![Brave Search Settings](./attachments/rag-openwebui/brave-search.png)
 
 ## Creating Your First Knowledge Base
 
@@ -299,7 +299,7 @@ Now that we've set up all the components of our RAG pipeline, let's create a kno
 2. Extract the main.zip file to a location on your computer
 3. Navigate to the extracted folder structure, which should look like: `docs-main/docs/` or something similar
 
-![OpenWebUI Documentation Files](/src/content/docs/start/attachments/rag-openwebui/docs-folder.png)
+![OpenWebUI Documentation Files](./attachments/rag-openwebui/docs-folder.png)
 
 4. The innermost `docs` folder is what we need - this contains all the markdown (.md and .mdx) files that will form our knowledge base
 5. These markdown files contain the official OpenWebUI documentation in a format that's ideal for our RAG system
@@ -311,23 +311,23 @@ Now that we've set up all the components of our RAG pipeline, let's create a kno
 3. Purpose: Assistance
 4. Click "Create Knowledge"
 
-![Knowledge Base Creation Interface](/src/content/docs/start/attachments/rag-openwebui/create-knowledge.png)
+![Knowledge Base Creation Interface](./attachments/rag-openwebui/create-knowledge.png)
 
 ### 3. Upload the Documentation Files
 
 1. Click the "+" button on the far right to add content
 2. Select "Upload directory" from the dropdown menu
 
-![Upload Knowledge Folder](/src/content/docs/start/attachments/rag-openwebui/upload-knowledge.png)
+![Upload Knowledge Folder](./attachments/rag-openwebui/upload-knowledge.png)
 
 3. Navigate to the innermost `docs` directory containing the markdown files
 4. Select the folder and click "Select Folder"
 
-![Select Folder](/src/content/docs/start/attachments/rag-openwebui/select-folder.png)
+![Select Folder](./attachments/rag-openwebui/select-folder.png)
 
 5. Wait for the system to upload and process all documents (you'll see an upload progress indicator showing the number of files being processed)
 
-![Upload Progress](/src/content/docs/start/attachments/rag-openwebui/upload-progress.png) 6. Behind the scenes, Apache Tika is parsing the markdown documents according to your configured settings 7. The system is chunking the content, generating vector embeddings using your configured embedding model, and storing these in the vector database 8. The system will automatically process all files in subdirectories like features, getting-started, etc.
+![Upload Progress](./attachments/rag-openwebui/upload-progress.png) 6. Behind the scenes, Apache Tika is parsing the markdown documents according to your configured settings 7. The system is chunking the content, generating vector embeddings using your configured embedding model, and storing these in the vector database 8. The system will automatically process all files in subdirectories like features, getting-started, etc.
 
 ## Creating a Custom RAG-Enabled Model
 
@@ -344,7 +344,7 @@ After creating your knowledge base, the next step is to create a custom model th
 3. Knowledge Source: Select "Open WebUI Documentation" from the dropdown
 4. Save the Model
 
-![Custom Model Creation](/src/content/docs/start/attachments/rag-openwebui/custom-model.png)
+![Custom Model Creation](./attachments/rag-openwebui/custom-model.png)
 
 This configuration connects your chosen LLM with the knowledge base we just created, enabling the RAG capabilities we've set up.
 
@@ -363,7 +363,7 @@ Now let's test our implementation with some example queries:
 
 The system responds with contextually aware details related to configuring environment variables in OpenWebUi, pulled from sources in our knowledgebase.
 
-![Environment Variable Chat](/src/content/docs/start/attachments/rag-openwebui/env-variable-chat.png)
+![Environment Variable Chat](./attachments/rag-openwebui/env-variable-chat.png)
 
 ### 3. Understanding What's Happening
 
@@ -374,7 +374,7 @@ The system responds with contextually aware details related to configuring envir
 
 You can review the citations by clicking one of the reference links at the end of the response. The references are sorted by relevance score, with the highest-scoring source listed first.
 
-![Citation Popup](/src/content/docs/start/attachments/rag-openwebui/citation.png)
+![Citation Popup](./attachments/rag-openwebui/citation.png)
 
 The relevancy score (0-1) indicates how well each document chunk matches your query:
 
@@ -388,7 +388,7 @@ This scoring system helps you verify source quality, identify primary vs. supple
 
 1. Enable web search by clicking the "Web Search" button in the chat interface (globe icon)
 
-![Web Search Toggle](/src/content/docs/start/attachments/rag-openwebui/web-search.png) 2. You can toggle web search on or off at any time during your conversation
+![Web Search Toggle](./attachments/rag-openwebui/web-search.png) 2. You can toggle web search on or off at any time during your conversation
 
 - With web search ON: The system will retrieve information from both your knowledge base and the internet
 - With web search OFF: The system will only use your local knowledge base

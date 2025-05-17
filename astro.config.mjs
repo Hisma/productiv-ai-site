@@ -36,6 +36,10 @@ export default defineConfig({
               label: "Install OpenWebUI and Ollama",
               slug: "start/ollama-open-webui",
             },
+            {
+              label: "Multi-Source RAG with OpenWebUI",
+              slug: "start/multi-source-rag-openwebui",
+            },
           ],
         },
       ],
