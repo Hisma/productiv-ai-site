@@ -114,7 +114,7 @@ nvidia-smi
 ```
 
 You should see your GPU status information in the output.
-![nvidia-smi.png](./attachments/nvidia-smi.png)
+![nvidia-smi.png](/attachments/ollama-open-webui/nvidia-smi.png)
 
 Now you're ready to install ollama and spin up local AI models.
 
@@ -122,7 +122,7 @@ Now you're ready to install ollama and spin up local AI models.
 
 Inside portainer, we’re going to create a stack for ollama and open-webui. From the side menu inside your container group, press `stacks` button. From there, press `add stack` to create a new stack. Give the Stack an appropriate name, use the web editor as the build method, and populate as below -
 
-![image-20250420-190300.png](./attachments/image-20250420-190300.png)
+![image-20250420-190300.png](/attachments/ollama-open-webui/image-20250420-190300.png)
 
 Here’s the stack config if you are building ollama with an Nvidia GPU with openwebUI.
 
@@ -185,7 +185,7 @@ press “deploy the stack”
 
 Now you have full control over the stack via portainer and can update and modify your containers by accessing the stack editor.
 
-![image-20240711-074546.png](./attachments/image-20240711-074546.png)
+![image-20240711-074546.png](/attachments/ollama-open-webui/image-20240711-074546.png)
 
 If you don’t have an nvidia GPU and/or don't want to install ollama, you have a much simpler docker compose file that just installs OpenWebUI -
 
@@ -225,13 +225,13 @@ create a login account.
 
 click name at bottom → settings
 
-![image-20240710-131840.png](./attachments/image-20240710-131840.png)
+![image-20240710-131840.png](/attachments/ollama-open-webui/image-20240710-131840.png)
 
 then click “admin settings”.
 
 From admin settings, click “connections”. Under **Manage OpenAI API Connections**, press the “+” to add a new connection.
 
-![chrome_1QybvJYfXV-20250420-181918.png](./attachments/chrome_1QybvJYfXV-20250420-181918.png)
+![chrome_1QybvJYfXV-20250420-181918.png](/attachments/ollama-open-webui/chrome_1QybvJYfXV-20250420-181918.png)
 
 The base url for openai is `https://api.openai.com/v1`. Enter your API key as required. If you don’t have an API key with openai yet, create one. [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
 
@@ -239,19 +239,19 @@ This will require you to link a credit card to your account if you haven’t alr
 
 Once you’ve entered the API url and your API key, test the connection and confirm it’s good.
 
-![image-20250420-181758.png](./attachments/image-20250420-181758.png)
+![image-20250420-181758.png](/attachments/ollama-open-webui/image-20250420-181758.png)
 
 Make sure you can verify the connection.
 
 Test the API by starting a new chat, selecting an OpenAI model from the dropdown, and asking a question (OpenwebUI gives you “suggested prompts” to test if you’re lazy)
 
-![image-20250420-183454.png](./attachments/image-20250420-183454.png)
+![image-20250420-183454.png](/attachments/ollama-open-webui/image-20250420-183454.png)
 
 ## Configure Ollama (If using local AI)
 
 From the same “connections” menu we added our OpenAI connection, Under “Manage Ollama API Connections”, confirm you see the connection we configured as an environment variable when we set up docker container `OLLAMA_BASE_URL=http://ollama:11434`.
 
-![image-20250420-184125.png](./attachments/image-20250420-184125.png)
+![image-20250420-184125.png](/attachments/ollama-open-webui/image-20250420-184125.png)
 
 We directly connect to the ollama docker container by it’s name. This works because both containers are on the same local network.
 
@@ -261,11 +261,11 @@ Press the “new chat” button at the top left panel to start a new chat sessio
 
 Type in `llama3.1` in the search bar from the “select a model” dropdown. You will have the option to the model if the repo exists.
 
-![image-20240728-024615.png](./attachments/image-20240728-024615.png)
+![image-20240728-024615.png](/attachments/ollama-open-webui/image-20240728-024615.png)
 
 Select the option to pull the model and it will automatically pull the model and make it available use via the dropdown menu. Run a test prompt to make sure it works.
 
-![image-20240728-024829.png](./attachments/image-20240728-024829.png)
+![image-20240728-024829.png](/attachments/ollama-open-webui/image-20240728-024829.png)
 
 **note:** llama 3.1 is an older model, we’re simply testing that our ollama connection works. We’ll focus on local models in greater detail in later lessons. Llama 3.1 is a good test model because it’s only 5GB in size, which should fit fine in most consumer Nvidia GPUs.
 

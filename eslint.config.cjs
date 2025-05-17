@@ -1,6 +1,7 @@
-// eslint.config.cjs
+// eslint.config.cjs  —  Flat-config for ESLint 9
 const { FlatCompat } = require("@eslint/eslintrc");
 const { configs: jsConfigs } = require("@eslint/js");
+const globals = require("globals");
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
@@ -8,27 +9,27 @@ const compat = new FlatCompat({
 });
 
 module.exports = [
-  // ─── 0) Ignore everything except your source ───
+  /* ── 0) ignore patterns ─────────────────────────────────── */
   {
     ignores: [
       "node_modules/**",
       ".astro/**",
       "dist/**",
-      "eslint.config.cjs", // don’t lint your config file
+      "eslint.config.cjs",
       "**/*.d.ts",
     ],
   },
 
-  // ─── 1) ESLint’s built‑in recommended rules ───
+  /* ── 1) built-in recommended rules ─────────────────────── */
   jsConfigs.recommended,
 
-  // ─── 2) Pull in shareable configs via FlatCompat ───
+  /* ── 2) legacy shareable configs (TypeScript + Astro) ──── */
   ...compat.extends(
     "plugin:@typescript-eslint/recommended",
     "plugin:astro/recommended",
   ),
 
-  // ─── 3) JS & TS files ───
+  /* ── 3) project-wide JS + TS (uses TS parser) ───────────── */
   {
     files: ["**/*.{js,ts}"],
     languageOptions: {
@@ -41,12 +42,19 @@ module.exports = [
     plugins: {
       "@typescript-eslint": require("@typescript-eslint/eslint-plugin"),
     },
-    rules: {
-      // your custom JS/TS rules here
+  },
+
+  /* ── 3b) Node helper scripts (plain JS) ─────────────────── */
+  {
+    files: ["scripts/**/*.js"], // adjust path if needed
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: { ...globals.node }, // enable process, console, etc.
     },
   },
 
-  // ─── 4) Astro files ───
+  /* ── 4) Astro component files ───────────────────────────── */
   {
     files: ["**/*.astro"],
     languageOptions: {
@@ -60,9 +68,6 @@ module.exports = [
     },
     plugins: {
       astro: require("eslint-plugin-astro"),
-    },
-    rules: {
-      // your custom Astro rules here
     },
   },
 ];
