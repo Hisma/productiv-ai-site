@@ -1,9 +1,11 @@
 ---
-title: "Implement Multi-Source RAG with Hybrid Search and Re-ranking in OpenWebUI"
+title: "Multi-Source RAG with Hybrid Search and Re-ranking in OpenWebUI"
 description: "Learn how to set up a powerful Retrieval-Augmented Generation (RAG) pipeline in OpenWebUI that combines local knowledge bases with web search, using hybrid retrieval and re-ranking for more accurate AI responses."
 ---
 
 import { YouTube } from "astro-embed";
+
+![Title Image](/attachments/rag-openwebui/title-image.png)
 
 <YouTube id="cd2OhuWcpYg" />
 
@@ -11,7 +13,7 @@ import { YouTube } from "astro-embed";
 
 Retrieval-Augmented Generation (RAG) is a powerful technique that enhances Large Language Models (LLMs) by grounding their responses in factual, relevant information. Instead of relying solely on the model's pre-trained knowledge, RAG retrieves specific information from external sources and uses it as context for generating responses.
 
-Our implementation takes RAG to the next level with three key enhancements:
+This implementation takes RAG to the next level with three key enhancements:
 
 1. **Multi-Source Retrieval**: Pulls information from both your local knowledge base (documents you upload) and the web via Brave Search API, giving your AI access to both your private documents and the latest information online.
 
@@ -66,7 +68,6 @@ Before implementing this RAG pipeline, you'll need:
 
 - OpenWebUI and Ollama set up (see our [previous guide](/start/ollama-open-webui))
 - An OpenAI API key for embeddings (or a local embedding model)
-- A Brave Search API key (if you want to enable web search)
 
 ## Implementation Steps
 
