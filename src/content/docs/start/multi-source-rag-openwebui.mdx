@@ -233,7 +233,7 @@ Now, set up the hybrid search and re-ranking capabilities:
 1. Scroll down to the Retrieval section
 2. Configure the following settings:
 
-   - **Full Context Mode**: Enabled
+   - **Full Context Mode**: Disabled
    - **Hybrid Search**: Enabled (this activates both dense and sparse search)
    - **Top K**: 20 (number of initial candidates to retrieve)
    - **Top K Reranker**: 10 (number of candidates after reranking)
@@ -335,9 +335,9 @@ Now that we've set up all the components of our RAG pipeline, let's create a kno
 
 ![Upload Progress](/attachments/rag-openwebui/upload-progress.png)
 
-6. Behind the scenes, Apache Tika is parsing the markdown documents according to your configured settings
-7. The system is chunking the content, generating vector embeddings using your configured embedding model, and storing these in the vector database
-8. The system will automatically process all files in subdirectories like features, getting-started, etc.
+- Behind the scenes, Apache Tika is parsing the markdown documents according to your configured settings
+- The system is chunking the content, generating vector embeddings using your configured embedding model, and storing these in the vector database
+- The system will automatically process all files in subdirectories like features, getting-started, etc.
 
 ## Creating a Custom RAG-Enabled Model
 
