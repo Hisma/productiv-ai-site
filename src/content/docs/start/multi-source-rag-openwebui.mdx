@@ -45,7 +45,8 @@ Here's how our multi-source RAG pipeline works:
 
 1. **Document Processing**: Upload documents to Apache Tika, which extracts text and metadata from various file formats (PDF, DOCX, PPT, even audio and video)
 
-  - view Tika document supported formats  
+- view Tika document supported formats
+
 2. **Document Embedding**: The extracted text is chunked and converted into vector embeddings using a model like text-embedding-3-small, then stored in a vector database
 
 3. **User Query**: When you ask a question, the system processes it through multiple retrieval paths
