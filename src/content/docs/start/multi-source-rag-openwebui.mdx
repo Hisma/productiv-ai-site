@@ -43,8 +43,9 @@ This approach delivers more accurate, trustworthy AI responses with several bene
 
 Here's how our multi-source RAG pipeline works:
 
-1. **Document Processing**: Upload documents to Apache Tika, which extracts text and metadata from various file formats (PDF, DOCX, PPT, etc.)
+1. **Document Processing**: Upload documents to Apache Tika, which extracts text and metadata from various file formats (PDF, DOCX, PPT, even audio and video)
 
+  - view Tika document supported formats  
 2. **Document Embedding**: The extracted text is chunked and converted into vector embeddings using a model like text-embedding-3-small, then stored in a vector database
 
 3. **User Query**: When you ask a question, the system processes it through multiple retrieval paths
@@ -246,7 +247,7 @@ Now, set up the hybrid search and re-ranking capabilities:
 - **Reranking Engine**: "Default (SentenceTransformers)"
 - **Reranking Model**: `BAI/bge-reranker-v2-m3`
 
-This option uses your local GPU to run the re-ranking model, which can provide faster processing, but requires you have required hardware and followed the Nvidia GPU setup. This is the recommended solution.
+This option uses your local GPU to run the re-ranking model, which can provide faster processing, but requires you have required hardware. This is the recommended solution.
 
 - note: Fortunately the reranker is small and only consumes around 1GB of GPU VRAM.
 
