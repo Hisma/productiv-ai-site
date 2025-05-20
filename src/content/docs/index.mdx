@@ -3,32 +3,70 @@ title: ProductivAI
 description: Leverage AI tools and techniques to maximize your productivity
 template: splash
 hero:
-  tagline: Learn How to Leverage AI to Boost your Productivity
+  title: ProdutivAI
+  tagline: Turn AI into your productivity superpower.
   image:
-    file: ../../assets/ai-productivity.png
+    file: ../../assets/avatar.webp
   actions:
-    - text: Get Started
+    - text: Start Learning Now
       link: /start/wsl2-portainer/
       icon: right-arrow
-    - text: Follow along with the content on my youtube channel
-      link: https://www.youtube.com/@Productiv-ai
+      variant: primary
+    - text: You can also learn by visiting my youtube channel
+      link: http://www.youtube.com/@ProductivAI
       icon: youtube
       variant: minimal
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-## Level Up Your AI Skills
+<div class="terminal-container my-16">
+  <div class="terminal">
+    <div class="terminal-header">
+      <div class="top gap-2 items-center">
+        <div class="terminal-dots flex gap-2">
+          <span class="w-4 h-4 bg-red-500 rounded-full"></span>
+          <span class="w-4 h-4 bg-yellow-400 rounded-full"></span>
+          <span class="w-4 h-4 bg-green-500 rounded-full"></span>
+        </div>
+        <span class="terminal-title ml-4 text-sm text-gray-400">terminal</span>
+      </div>
+    </div>
+
+    <div class="terminal-body">
+      <div class="line command typing">
+        <span class="prompt">$</span> python productivity_boost.py
+      </div>
+
+      <div class="terminal-output-container show-after-type mt-4">
+        <div class="line output-header">Running productivity workflow...</div>
+        <div class="line output-task">→ Task 1/3: Summarized 4 quarterly reports (823 pages)</div>
+        <div class="line output-task">→ Task 2/3: Extracted 37 action items from 12 meeting notes</div>
+        <div class="line output-task">→ Task 3/3: Generated comprehensive productivity metrics</div>
+        <div class="line"></div>
+        <div class="line result"><span class="checkmark">✓</span> Workflow completed in 12.4 seconds</div>
+        <div class="line result"><span class="checkmark">✓</span> Time saved: 4.5 hours of manual work</div>
+        <div class="line result"><span class="checkmark">✓</span> Productivity increased by 300%</div>
+        <div class="line superpower">[ PRODUCTIVITY SUPERPOWER ACTIVATED ]</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<h2 class="text-4xl font-bold text-center mb-12 bg-[var(--gradient-primary)] bg-clip-text text-transparent">
+  Level Up Your AI Skills
+</h2>
 
 <CardGrid>
   <Card title="RAG" icon="open-book">
-    Build an AI-powered local knowledge base.
+    Build an AI-powered local knowledge base for personalised assistance.
   </Card>
   <Card title="External Tools" icon="puzzle">
     Connect AI models to external tools with MCPs and A2A.
   </Card>
   <Card title="Agentic Programming" icon="vscode">
-    Code efficiently with agentic tools in vscode like Cline and Copilot.
+    Code efficiently with agentic tools in VS Code like Cline and Copilot.
   </Card>
   <Card title="Workflows" icon="seti:pipeline">
     Automate tedious tasks with prompt techniques and productivity workflows.

@@ -1,15 +1,380 @@
-@layer base, starlight, theme, components, utilities;
+/* ---------- 1 ▪ Load Tailwind core ---------- */
+@import "tailwindcss";
 
-@import "@astrojs/starlight-tailwind";
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
-.hero > img {
-  width: min(100%, 40rem) !important;
-  max-width: 600px !important;
+/* ---------- 2 ▪ Design-token layer ---------- */
+@theme {
+  --color-primary: oklch(60% 0.18 250);
+  --color-secondary: oklch(60% 0.2 285);
+  --color-primary-light: color-mix(in oklch, var(--color-primary) 85%, white);
+  --color-primary-dark: color-mix(in oklch, var(--color-primary) 85%, black);
+
+  --color-bg: oklch(10% 0.01 240);
+  --color-bg-alt: oklch(5% 0.01 240);
+  --color-fg: oklch(95% 0.01 240);
+  --color-fg-muted: oklch(75% 0.01 240);
+
+  --gradient-primary: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  --gradient-primary-hover: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--color-primary) 90%, white),
+    color-mix(in oklch, var(--color-secondary) 90%, white)
+  );
+
+  --fade-in: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  --typing: typingCursor 1s steps(1) infinite;
 }
 
-@media (min-width: 50rem) {
-  .hero > img {
-    width: min(100%, 40rem) !important;
+/* ---------- 3 ▪ Base styles ---------- */
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply min-h-screen bg-gray-900 text-white antialiased font-sans;
+    background-image: radial-gradient(
+      circle at top right,
+      rgba(45, 45, 45, 0.8),
+      rgba(30, 30, 30, 1) 70%
+    );
+    background-attachment: fixed;
+  }
+  ::selection {
+    @apply bg-blue-600/40 text-white;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold font-sans;
+  }
+}
+
+/* ---------- 4 ▪ Utility classes ---------- */
+@layer utilities {
+  .animate-fade-in {
+    animation: var(--fade-in);
+  }
+  .animate-typing {
+    animation: var(--typing);
+  }
+}
+
+/* ---------- 5 ▪ Component classes ---------- */
+@layer components {
+  :root {
+    --terminal-bg: #1e1e2e;
+    --terminal-text: #f8f8f2;
+    --terminal-prompt: #6272a4;
+    --terminal-analyzing: #8be9fd;
+    --terminal-optimizing: #50fa7b;
+    --terminal-automating: #ffb86c;
+    --terminal-checkmark: #50fa7b;
+    --terminal-result: #bd93f9;
+    --terminal-superpower: linear-gradient(90deg, #8be9fd, #bd93f9);
+  }
+
+  .terminal-container {
+    @apply flex justify-center mx-auto my-8 max-w-3xl;
+  }
+
+  .terminal {
+    @apply w-full rounded-lg overflow-hidden shadow-xl font-mono text-xs text-white transition-all;
+    background-color: #171723;
+    color: var(--terminal-text);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .terminal:hover {
+    @apply -translate-y-1;
+    box-shadow:
+      0 15px 40px rgba(29, 155, 255, 0.3),
+      0 0 15px rgba(138, 43, 226, 0.2);
+  }
+
+  .terminal-header {
+    @apply p-6 border-b flex flex-col;
+    background: linear-gradient(
+      to bottom,
+      rgba(30, 30, 45, 0.9),
+      rgba(20, 20, 35, 0.95)
+    );
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .terminal-title {
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.03em;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .terminal-header .top {
+    @apply flex items-center mb-2;
+  }
+
+  .terminal-button {
+    @apply h-4 w-4 rounded-full inline-block relative;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+  }
+
+  .terminal-dots {
+    @apply flex items-center gap-2 leading-none;
+  }
+
+  .terminal-button:hover::after {
+    content: "";
+    @apply absolute inset-0 bg-white/30 rounded-full;
+  }
+
+  .terminal-body {
+    @apply p-5 leading-relaxed;
+  }
+
+  .terminal .line {
+    @apply mb-2.5;
+  }
+
+  .terminal-output-container .line {
+    @apply mb-2.5;
+  }
+
+  .terminal .prompt {
+    @apply mr-2.5 text-green-400;
+  }
+
+  .terminal .command.typing {
+    @apply relative;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typewriter 2.5s steps(30) 0.5s 1 normal both;
+  }
+
+  .terminal .command.typing::after {
+    content: "|";
+    animation: blink 1s step-start infinite;
+    display: inline-block;
+    margin-left: 0.1rem;
+    color: var(--terminal-text);
+    position: absolute;
+  }
+
+  .show-after-type {
+    opacity: 0;
+    animation: fadeInAfterTyping 0.5s ease-in forwards;
+    animation-delay: 3.2s;
+  }
+
+  .show-after-type .line {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  .show-after-type .line:nth-child(1) {
+    animation-delay: 3.7s;
+  }
+  .show-after-type .line:nth-child(2) {
+    animation-delay: 4.1s;
+  }
+  .show-after-type .line:nth-child(3) {
+    animation-delay: 4.5s;
+  }
+  .show-after-type .line:nth-child(4) {
+    animation-delay: 4.9s;
+  }
+  .show-after-type .line:nth-child(5) {
+    animation-delay: 5.3s;
+  }
+  .show-after-type .line:nth-child(6) {
+    animation-delay: 5.7s;
+  }
+  .show-after-type .line:nth-child(7) {
+    animation-delay: 6.1s;
+  }
+  .show-after-type .line:nth-child(8) {
+    animation-delay: 6.5s;
+  }
+  .show-after-type .line:nth-child(9) {
+    animation-delay: 6.9s;
+  }
+  .show-after-type .line:nth-child(10) {
+    animation-delay: 7.3s;
+  }
+
+  .terminal .analyzing {
+    color: var(--terminal-analyzing);
+  }
+  .terminal .optimizing {
+    color: var(--terminal-optimizing);
+  }
+  .terminal .automating {
+    color: var(--terminal-automating);
+  }
+  .terminal .checkmark {
+    color: var(--terminal-checkmark);
+    @apply mr-2.5;
+  }
+  .terminal .result {
+    color: var(--terminal-result);
+  }
+
+  .terminal .superpower {
+    @apply font-bold text-center mt-5;
+    background: var(--terminal-superpower);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse 2s infinite;
+  }
+
+  .code-keyword {
+    @apply text-purple-400;
+  }
+  .code-class {
+    @apply text-yellow-300;
+  }
+  .code-comment {
+    @apply text-slate-500;
+  }
+  .code-string {
+    @apply text-green-400;
+  }
+  .code-function {
+    @apply text-blue-300;
+  }
+
+  .terminal-output-container {
+    @apply mt-6 p-4 rounded-md border border-slate-700 bg-slate-900/70;
+  }
+
+  .output-header {
+    @apply text-blue-300 font-bold mb-2;
+  }
+  .output-task {
+    @apply text-cyan-300;
+  }
+
+  .card {
+    @apply flex gap-3 p-6 border border-white/10 bg-black/40
+      rounded-xl shadow-lg transition
+      hover:-translate-y-1 hover:shadow-xl;
+  }
+  .card-icon {
+    @apply flex items-center justify-center w-10 h-10 rounded-lg shrink-0;
+  }
+  .card-title {
+    @apply text-xl font-semibold leading-snug;
+  }
+  .card-text {
+    @apply text-white/70;
+  }
+
+  h1#_top {
+    background: linear-gradient(
+      to right,
+      #60a5fa,
+      #c084fc
+    ) !important; /* from-blue-400 to-purple-400 */
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    font-weight: 800;
+  }
+
+  .hero .sl-link-button.primary {
+    background: linear-gradient(
+      to right,
+      #60a5fa,
+      #c084fc
+    ) !important; /* from-blue-400 to-purple-400 */
+    color: white !important;
+    font-weight: 600;
+    border-radius: 9999px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    box-shadow: 0 4px 14px rgba(96, 165, 250, 0.3);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .hero .sl-link-button.primary:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+
+  /* ▸ Future-proof hero padding override */
+  div[class*="hero"][class*="astro-"] {
+    padding-top: 2rem !important;
+    padding-bottom: 3rem !important;
+  }
+}
+
+/* ---------- 6 ▪ Keyframes ---------- */
+@layer keyframes {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInAfterTyping {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes typingCursor {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes typewriter {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
   }
 }
