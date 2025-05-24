@@ -152,7 +152,7 @@ services:
     image: ghcr.io/open-webui/open-webui:dev-cuda
     container_name: open-webui
     volumes:
-      - openweb-ui:/app/backend/data
+      - open-webui:/app/backend/data
     depends_on:
       - ollama
     deploy:

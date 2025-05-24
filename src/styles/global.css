@@ -255,7 +255,8 @@
     @apply text-cyan-300;
   }
 
-  h1#_top {
+  /* Apply gradient only to the landing page heading */
+  .hero h1#_top {
     background: linear-gradient(
       to right,
       #60a5fa,
